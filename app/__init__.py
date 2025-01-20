@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_babel import Babel
+from flask_login import LoginManager
 
 # For babel: get preferred language
 def get_locale():
@@ -14,6 +15,7 @@ bootstrap = Bootstrap()
 db = SQLAlchemy()
 migrate = Migrate()
 babel = Babel()
+login = LoginManager()
 
 # Create the app, called in 
 def create_app(config_class=Config):
@@ -25,6 +27,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     bootstrap.init_app(app)
     babel.init_app(app, default_locale='de', locale_selector=get_locale)
+    login.init_app(app)
 
     # Load error handling blueprint
     from app.errors import bp as errors_bp
