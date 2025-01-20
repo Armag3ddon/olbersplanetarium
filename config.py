@@ -9,3 +9,5 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'c54ec5889e42b654e72263365d299a8f001bf2e91c0f0fdc244117ca14b6340a'
     # Flask-bootstrap
     BOOTSTRAP_SERVER_LOCAL = True # avoid GDPR troubles
+    # Flask-babel
+    LANGUAGES = ['de', 'en']

@@ -1,9 +1,15 @@
-from flask import Flask
+from flask import Flask, request, current_app
 from config import Config
 from flask_bootstrap import Bootstrap
+from flask_babel import Babel
+
+# For babel: get preferred language
+def get_locale():
+    return request.accept_languages.best_match(current_app.config['LANGUAGES'])
 
 # Load modules
 bootstrap = Bootstrap()
+babel = Babel()
 
 # Create the app, called in 
 def create_app(config_class=Config):
@@ -12,6 +18,7 @@ def create_app(config_class=Config):
 
     # Initiate modules
     bootstrap.init_app(app)
+    babel.init_app(app, default_locale='de', locale_selector=get_locale)
 
     # Load error handling blueprint
     from app.errors import bp as errors_bp
@@ -20,5 +27,11 @@ def create_app(config_class=Config):
     # Load main application (logged in)
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
+
+    # Inject babel's selected locale to the context processor
+    # Available simply as 'lang' in templates (see base.html)
+    @app.context_processor
+    def utility_processor():
+        return dict(lang=get_locale())
 
     return app
