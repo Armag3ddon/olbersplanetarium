@@ -1,5 +1,7 @@
 from flask import Flask, request, current_app
 from config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_babel import Babel
 
@@ -9,6 +11,8 @@ def get_locale():
 
 # Load modules
 bootstrap = Bootstrap()
+db = SQLAlchemy()
+migrate = Migrate()
 babel = Babel()
 
 # Create the app, called in 
@@ -17,6 +21,8 @@ def create_app(config_class=Config):
     app.config.from_object(Config)
 
     # Initiate modules
+    db.init_app(app)
+    migrate.init_app(app, db)
     bootstrap.init_app(app)
     babel.init_app(app, default_locale='de', locale_selector=get_locale)
 
@@ -35,3 +41,5 @@ def create_app(config_class=Config):
         return dict(lang=get_locale())
 
     return app
+
+from app import models
