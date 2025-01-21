@@ -11,6 +11,6 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
     # Flask-bootstrap
-    BOOTSTRAP_SERVER_LOCAL = True # avoid GDPR troubles
+    BOOTSTRAP_SERVE_LOCAL = True # avoid GDPR troubles
     # Flask-babel
     LANGUAGES = ['de', 'en']
