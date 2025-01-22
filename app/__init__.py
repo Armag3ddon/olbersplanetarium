@@ -2,7 +2,7 @@ from flask import Flask, request, current_app
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap5
 from flask_babel import Babel
 from flask_login import LoginManager
 
@@ -11,7 +11,7 @@ def get_locale():
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])
 
 # Load modules
-bootstrap = Bootstrap()
+bootstrap = Bootstrap5()
 db = SQLAlchemy()
 migrate = Migrate()
 babel = Babel()

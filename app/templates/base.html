@@ -16,7 +16,22 @@
         {% endblock %}
     </head>
     <body>
-        <!-- Your page content -->
+        <div class="container-fluid">
+            <div class="row align-items-start mt-1">
+                <div class="col-md-4">
+                    {% block header_title %}<h4>Planetarium Bremen</h4>{% endblock %}
+                </div>
+                <div class="col-md-4 offset-md-4">
+                    {% block header_right %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        {% block divider %}
+        <hr class="my-1">
+        <div class="container-fluid">
+            <div class="row my-1"></div>
+        </div>
+        {% endblock %}
         {% block content %}{% endblock %}
 
         {% block scripts %}
