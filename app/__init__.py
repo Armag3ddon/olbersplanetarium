@@ -28,6 +28,7 @@ def create_app(config_class=Config):
     bootstrap.init_app(app)
     babel.init_app(app, default_locale='de', locale_selector=get_locale)
     login.init_app(app)
+    login.login_view = 'auth.login'
 
     # Load error handling blueprint
     from app.errors import bp as errors_bp
