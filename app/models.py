@@ -32,6 +32,12 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def check_right(self, right):
+        return getattr(self.rights, right)
+
+    def check_right_or_admin(self, right):
+        return self.rights.is_admin or self.check_right(right)
+
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))

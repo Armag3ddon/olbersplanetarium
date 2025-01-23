@@ -16,8 +16,10 @@ def login():
         user = db.session.scalar(
             sa.select(User).where(User.username == form.username.data))
         if user is None or not user.check_password(form.password.data):
-            print(user.check_password(form.password.data))
             flash(_('Benutzername oder Passwort falsch!'))
+            return redirect(url_for('auth.login'))
+        if not user.check_right('login_allowed'):
+            flash(_('Login nicht erlaubt!'))
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('main.startpage'))
