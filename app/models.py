@@ -32,9 +32,11 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    # Check if the user has a specific right
     def check_right(self, right):
         return getattr(self.rights, right)
 
+    # Check if the user is an admin or has a specific right
     def check_right_or_admin(self, right):
         return self.rights.is_admin or self.check_right(right)
 
@@ -46,8 +48,11 @@ def load_user(id):
 class Right(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+    # If a user is an admin, they have all rights except login right (for security purposes)
     is_admin: so.Mapped[bool] = so.mapped_column(default=False)
+    # If set to False, a user can't log in, even if admin privileges are granted
     login_allowed: so.Mapped[bool] = so.mapped_column(default=True)
+    # Create calendar entries
     create_calendar_entry: so.Mapped[bool] = so.mapped_column(default=False)
 
     user: so.Mapped[User] = so.relationship(back_populates='rights')

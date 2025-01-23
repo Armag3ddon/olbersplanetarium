@@ -3,6 +3,7 @@ from flask_login import login_required
 from flask_babel import _
 from app.main import bp
 
+# STARTPAGE
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
 @bp.route('/start', methods=['GET', 'POST'])
@@ -11,6 +12,7 @@ from app.main import bp
 def startpage():
     return render_template('main/startpage.html', title=_("Startseite - "))
 
+# CALENDAR
 @bp.route('/calendar', methods=['GET', 'POST'])
 @login_required
 def calendar():
