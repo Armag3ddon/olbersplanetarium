@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
+{% from 'bootstrap5/nav.html' import render_nav_item %}
 
-{% block content %}
-<div class="container">
-    <h1>Hallo Datenbank</h1>
+{% block header_right %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark">
+    <div class="container">
+        {{ render_nav_item('main.startpage', _('Startseite')) }}
+        {{ render_nav_item('main.calendar', _('Veranstaltungen')) }}
+    </div>
+</nav>
+{% endblock %}
+
+{% block divider %}
+<div class="container-fluid headline shadow">
+    <div class="row justify-content-start">
+        <h1 class="goldenh1 my-2">{% block headline %}{% endblock %}</h1>
+    </div>
 </div>
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'main/main.html' %}
+
+{% block headline %}{{ _('Startseite') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row gx-4 mt-3 justify-content-around">
+        <div class="col-sm-4">
+            <div class="card p-3 shadow rounded">
+                <div class="card-header">
+                    {{ _('Aktuelle Nachrichten') }}
+                </div>
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card p-3 shadow rounded">
+                <div class="card-header">
+                    {{ _('Wichtige Infos') }}
+                </div>
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
