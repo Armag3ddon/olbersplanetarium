@@ -1,5 +1,6 @@
 from typing import Optional
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -59,3 +60,14 @@ class Right(db.Model):
 
     def __repr__(self):
         return '<Right by {}, admin: {}>'.format(self.user_id, self.is_admin)
+
+# Calendar entries
+class CalendarEntry(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    title: so.Mapped[str] = so.mapped_column(sa.String(256))
+    description: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+    start: so.Mapped[datetime] = so.mapped_column()
+    end: so.Mapped[datetime] = so.mapped_column()
+
+    def __repr__(self):
+        return '<CalendarEntry {}>'.format(self.title)
