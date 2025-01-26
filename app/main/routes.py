@@ -16,4 +16,4 @@ def startpage():
 @bp.route('/calendar', methods=['GET', 'POST'])
 @login_required
 def calendar():
-    return render_template('main/startpage.html', title=_("Startseite - "))
+    return render_template('main/calendar.html', title=_("Kalender - "))
