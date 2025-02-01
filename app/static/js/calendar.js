@@ -16,7 +16,7 @@ class Calendar {
 	setup() {
 		this.checkQueryParams();
 		this.setMonthOfYear(parseInt(this.getQueryParams.get('year')), parseInt(this.getQueryParams.get('month')));
-		this.render();
+		this.getEvents();
 	}
 
 	nextMonth() {
@@ -95,7 +95,9 @@ class Calendar {
 	}
 
 	// Render the calendar
-	render() {
+	render(events) {
+		// Create buffer
+		const fragment = document.createDocumentFragment();
 		// Clear the parent
 		this.parent.innerHTML = '';
 
@@ -106,7 +108,7 @@ class Calendar {
 				weekCounter = 0;
 				week = document.createElement('tr');
 				week.classList.add('calendar-week');
-				this.parent.appendChild(week);
+				fragment.appendChild(week);
 			}
 			if (i <= this.firstDay) {
 				const empty = document.createElement('td');
@@ -116,9 +118,13 @@ class Calendar {
 			}
 			const day = document.createElement('td');
 			day.classList.add('calendar-day');
+			day.id = 'day-' + (i - this.firstDay);
 			day.innerHTML = i - this.firstDay;
-			if (i == this.today) {
+			if (i - this.firstDay == this.today) {
 				day.classList.add('calendar-today');
+			}
+			if (events[i - this.firstDay]) {
+				day.insertAdjacentHTML('beforeend', this.getDayHTML(events[i - this.firstDay]));
 			}
 			week.appendChild(day);
 			weekCounter++;
@@ -131,9 +137,45 @@ class Calendar {
 			}
 		}
 
+		// Render the calendar from the buffer
+		this.parent.appendChild(fragment);
 		// Update the month
 		this.month_display.innerHTML = months[this.month];
 		// Update the year
 		this.year_display.innerHTML = this.year;
+	}
+
+	// Query the server for the events of the current month
+	getEvents() {
+		const url = '/events/' + this.year + '/' + (this.month + 1);
+		fetch(url)
+			.then(response => response.json())
+			.then(data => {
+				const events = new Array(31);
+				for (let i = 0; i < data.events.length; i++) {
+					const startDay = new Date(data.events[i].start).getDate();
+					if (!events[startDay]) {
+						events[startDay] = [];
+					}
+					events[startDay].push(data.events[i]);
+				}
+				this.render(events);
+			});
+	}
+
+	getDayHTML(events) {
+		if (!events instanceof Array) {
+			events = [events];
+		}
+
+		let html = '', time;
+		for (let i = 0; i < events.length; i++) {
+			time = DateTime.fromHTTP(events[i].start).setLocale(locale);
+			html +=
+			`<div class="btn-public m-1 p-1 mx-auto calendar-event" data-id="${events[i].id}">
+				<p class="m-0">${time.toLocaleString(DateTime.TIME_SIMPLE)}: ${events[i].title}</p>
+			</div>`;
+		}
+		return html;
 	}
 }

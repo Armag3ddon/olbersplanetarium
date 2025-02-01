@@ -39,12 +39,24 @@
             </table>
         </div>
     </div>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Legende</h5>
+                    <p class="card-text calendar-today">Heute</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
 <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/luxon.js') }}"></script>
 <script>
     const months = [
         '{{ _('Januar') }}',
@@ -60,6 +72,8 @@
         '{{ _('November') }}',
         '{{ _('Dezember') }}'
     ];
+    const locale = '{{ lang }}';
+    const DateTime = luxon.DateTime;
     const calendar = new Calendar(
         document.getElementById('calendar-body'),
         document.getElementById('current-month'),
