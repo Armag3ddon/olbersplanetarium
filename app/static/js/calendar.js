@@ -39,7 +39,7 @@ class Calendar {
 		this.setup();
 	}
 
-	// Check if the query parameters are set
+	// Check if the query parameters (month, year) are set
 	checkQueryParams() {
 		if (!this.getQueryParams.has('year')) {
 			const year = new Date().getFullYear();
@@ -60,7 +60,6 @@ class Calendar {
 		}
 		history.replaceState(null, '', window.location.pathname + '?' + this.getQueryParams.toString());
 	}
-
 
 	// Set up the month to display
 	setMonthOfYear(year, month) {
@@ -104,31 +103,38 @@ class Calendar {
 		// Create the calendar
 		let week, weekCounter;
 		for (let i = 1; i <= this.days + this.firstDay; i++) {
+			// Create a table row for the week
 			if (i % 7 == 1) {
 				weekCounter = 0;
 				week = document.createElement('tr');
 				week.classList.add('calendar-week');
 				fragment.appendChild(week);
 			}
+			// Fill in blank cells as long as the first day of the month is not a Monday
 			if (i <= this.firstDay) {
 				const empty = document.createElement('td');
 				empty.classList.add('calendar-empty');
 				week.appendChild(empty);
 				continue;
 			}
+			// Create a cell for the current day
 			const day = document.createElement('td');
 			day.classList.add('calendar-day');
 			day.id = 'day-' + (i - this.firstDay);
 			day.innerHTML = i - this.firstDay;
+			// Highlight today
 			if (i - this.firstDay == this.today) {
 				day.classList.add('calendar-today');
 			}
+			// Fill in events
 			if (events[i - this.firstDay]) {
 				day.insertAdjacentHTML('beforeend', this.getDayHTML(events[i - this.firstDay]));
 			}
+			// Add the day cell to the week row
 			week.appendChild(day);
 			weekCounter++;
 		}
+		// Fill in the last week with empty cells until full
 		if (weekCounter < 7) {
 			for (let i = weekCounter; i < 7; i++) {
 				const empty = document.createElement('td');
@@ -151,7 +157,9 @@ class Calendar {
 		fetch(url)
 			.then(response => response.json())
 			.then(data => {
+				// Create an array for the whole month (31 days)
 				const events = new Array(31);
+				// Sort events into the array at whatever day they are
 				for (let i = 0; i < data.events.length; i++) {
 					const startDay = new Date(data.events[i].start).getDate();
 					if (!events[startDay]) {
@@ -163,6 +171,7 @@ class Calendar {
 			});
 	}
 
+	// Create the HTML for all the events for the day (div with button style)
 	getDayHTML(events) {
 		if (!events instanceof Array) {
 			events = [events];
@@ -170,6 +179,7 @@ class Calendar {
 
 		let html = '', time;
 		for (let i = 0; i < events.length; i++) {
+			// Use luxon.js to parse the event time
 			time = DateTime.fromHTTP(events[i].start).setLocale(locale);
 			html +=
 			`<div class="btn-public m-1 p-1 mx-auto calendar-event" data-id="${events[i].id}">
