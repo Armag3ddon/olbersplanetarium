@@ -106,40 +106,46 @@ class Calendar {
 			// Create a table row for the week
 			if (i % 7 == 1) {
 				weekCounter = 0;
-				week = document.createElement('tr');
-				week.classList.add('calendar-week');
-				fragment.appendChild(week);
+				week = $('<tr>', { class: 'calendar-week' });
+				week.css({ 'min-height': '75px', 'height': '75px' });
+				fragment.appendChild(week.get(0));
 			}
 			// Fill in blank cells as long as the first day of the month is not a Monday
 			if (i <= this.firstDay) {
-				const empty = document.createElement('td');
-				empty.classList.add('calendar-empty');
-				week.appendChild(empty);
+				const empty = $('<td>', { class: 'calendar-empty' });
+				week.append(empty);
 				continue;
 			}
 			// Create a cell for the current day
-			const day = document.createElement('td');
-			day.classList.add('calendar-day');
-			day.id = 'day-' + (i - this.firstDay);
-			day.innerHTML = i - this.firstDay;
+			const day = $('<td>', { class: 'calendar-day align-middle position-relative pt-3', id: 'day-' + (i - this.firstDay) });
+			day.html('<div class="position-absolute top-0 start-0">'
+				+ (i - this.firstDay) +
+				'</div>');
+			day
+			.on('mouseenter', () => {
+				day.append(createButton);
+				createButton.show();
+			})
+			.on('mouseleave', () => {
+				createButton.hide();
+			});
 			// Highlight today
 			if (i - this.firstDay == this.today) {
-				day.classList.add('calendar-today');
+				day.addClass('calendar-today');
 			}
 			// Fill in events
 			if (events[i - this.firstDay]) {
-				day.insertAdjacentHTML('beforeend', this.getDayHTML(events[i - this.firstDay]));
+				day.append(this.getDayHTML(events[i - this.firstDay]));
 			}
 			// Add the day cell to the week row
-			week.appendChild(day);
+			week.append(day);
 			weekCounter++;
 		}
 		// Fill in the last week with empty cells until full
 		if (weekCounter < 7) {
 			for (let i = weekCounter; i < 7; i++) {
-				const empty = document.createElement('td');
-				empty.classList.add('calendar-empty');
-				week.appendChild(empty);
+				const empty = $('<td>', { class: 'calendar-empty' });
+				week.append(empty);
 			}
 		}
 

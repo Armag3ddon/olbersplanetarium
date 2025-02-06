@@ -22,21 +22,24 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped" style="border: solid 5px rgb(20, 20, 30);">
                 <thead>
                     <tr>
-                        <th>{{ _('Mo') }}</th>
-                        <th>{{ _('Di') }}</th>
-                        <th>{{ _('Mi') }}</th>
-                        <th>{{ _('Do') }}</th>
-                        <th>{{ _('Fr') }}</th>
-                        <th>{{ _('Sa') }}</th>
-                        <th>{{ _('So') }}</th>
+                        <th class="col-2">{{ _('Mo') }}</th>
+                        <th class="col-2">{{ _('Di') }}</th>
+                        <th class="col-2">{{ _('Mi') }}</th>
+                        <th class="col-2">{{ _('Do') }}</th>
+                        <th class="col-2">{{ _('Fr') }}</th>
+                        <th class="col-1">{{ _('Sa') }}</th>
+                        <th class="col-1">{{ _('So') }}</th>
                     </tr>
                 </thead>
                 <tbody id="calendar-body">
                 </tbody>
             </table>
+            <button type="button" class="btn btn-primarycontrast position-relative" style="display:none;" id="new-event">
+                {{ render_icon('plus') }}
+            </button>
         </div>
     </div>
     <div class="row">
@@ -57,6 +60,7 @@
 {{ super() }}
 <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
 <script src="{{ url_for('static', filename='js/luxon.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-3.7.1.js') }}"></script>
 <script>
     const months = [
         '{{ _('Januar') }}',
@@ -74,6 +78,7 @@
     ];
     const locale = '{{ lang }}';
     const DateTime = luxon.DateTime;
+    const createButton = $('#new-event');
     const calendar = new Calendar(
         document.getElementById('calendar-body'),
         document.getElementById('current-month'),
