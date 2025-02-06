@@ -28,6 +28,20 @@
         </div>
         {% block divider %}{% endblock %}
 
+        <div id="flash-message" class="container">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-info alert-dismissible fade show mt-2" role="alert">
+                        <ul>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
         {% block content %}{% endblock %}
 
         {% block scripts %}
