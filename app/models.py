@@ -68,6 +68,10 @@ class CalendarEntry(db.Model):
     description: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     start: so.Mapped[datetime] = so.mapped_column()
     end: so.Mapped[datetime] = so.mapped_column()
+    public: so.Mapped[bool] = so.mapped_column(default=False)
+    school: so.Mapped[bool] = so.mapped_column(default=False)
+    special: so.Mapped[bool] = so.mapped_column(default=False)
+    misc: so.Mapped[bool] = so.mapped_column(default=False)
 
     def __repr__(self):
         return '<CalendarEntry {}>'.format(self.title)
