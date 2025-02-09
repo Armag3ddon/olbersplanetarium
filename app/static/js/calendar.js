@@ -123,6 +123,7 @@ class Calendar {
 				'</div>');
 			day
 			.on('mouseenter', () => {
+				createButton.data("day", i - this.firstDay);
 				day.append(createButton);
 				createButton.show();
 			})
@@ -193,5 +194,10 @@ class Calendar {
 			</div>`;
 		}
 		return html;
+	}
+
+	newEvent() {
+		const day = createButton.data("day");
+		window.location.href = '/createevent?year=' + this.year + '&month=' + (this.month + 1) + '&day=' + day;
 	}
 }

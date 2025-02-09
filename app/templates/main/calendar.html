@@ -37,7 +37,7 @@
                 <tbody id="calendar-body">
                 </tbody>
             </table>
-            <button type="button" class="btn btn-primarycontrast position-relative" style="display:none;" id="new-event">
+            <button type="button" class="btn btn-primarycontrast position-relative" style="display:none;" id="new-event" data="">
                 {{ render_icon('plus') }}
             </button>
         </div>
@@ -87,5 +87,8 @@
     document.getElementById('previous-month').addEventListener('click', () => calendar.previousMonth());
     document.getElementById('next-month').addEventListener('click', () => calendar.nextMonth());
     calendar.setup();
+	createButton.on('click', () => {
+		calendar.newEvent();
+	});
 </script>
 {% endblock %}

@@ -1,3 +1,16 @@
+/* Fill forms according to GET parameters */
+
+function fillForms() {
+	const params = new URLSearchParams(window.location.search);
+	const year = params.get('year');
+	const month = params.get('month');
+	const day = params.get('day');
+
+	const time = DateTime.fromObject({ year: year, month: month, day: day, hour: 12, minute: 0 });
+	$('#start').val(time.toFormat("yyyy'-'MM'-'dd'T'HH':'mm"));
+	$('#end').val(time.plus({ hours: 1 }).toFormat("yyyy'-'MM'-'dd'T'HH':'mm"));
+}
+
 /* Show warning messages for malformed input */
 
 function initWarnings() {
