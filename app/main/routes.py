@@ -42,7 +42,19 @@ def createevent():
     # Check form submission
     if form.validate_on_submit():
         # Create new event
-        event = CalendarEntry(title=form.title.data, description=form.description.data, start=form.start.data, end=form.end.data)
+        public = False
+        school = False
+        special = False
+        misc = False
+        if form.type.data == 'public':
+            public = True
+        elif form.type.data == 'school':
+            school = True
+        elif form.type.data == 'special':
+            special = True
+        elif form.type.data == 'misc':
+            misc = True
+        event = CalendarEntry(title=form.title.data, description=form.description.data, start=form.start.data, end=form.end.data, public=public, school=school, special=special, misc=misc)
         db.session.add(event)
         db.session.commit()
         return render_template('main/createevent.html', title=_('Neue Veranstaltung - '), form=form, success=True)
