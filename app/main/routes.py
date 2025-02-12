@@ -31,7 +31,7 @@ def events(year, month):
     month = int(month)
     last_day = cal.monthrange(year, month)[1]
     query = db.session.scalars(sa.select(CalendarEntry).where(sa.and_(CalendarEntry.start >= f"{year}-{month}-01", CalendarEntry.start <= f"{year}-{month}-{last_day}")))
-    return { 'events': [ { 'id': e.id, 'title': e.title, 'start': e.start, 'end': e.end } for e in query ] }
+    return { 'events': [ { 'id': e.id, 'title': e.title, 'start': e.start, 'end': e.end, 'public': e.public, 'school': e.school, 'special': e.special, 'misc': e.misc } for e in query ] }
 
 # EVENT CREATION
 @bp.route('/createevent', methods=['GET', 'POST'])
