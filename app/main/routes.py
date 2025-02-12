@@ -57,5 +57,5 @@ def createevent():
         event = CalendarEntry(title=form.title.data, description=form.description.data, start=form.start.data, end=form.end.data, public=public, school=school, special=special, misc=misc)
         db.session.add(event)
         db.session.commit()
-        return render_template('main/createevent.html', title=_('Neue Veranstaltung - '), form=form, success=True)
-    return render_template('main/createevent.html', title=_('Neue Veranstaltung - '), form=form)
+        return render_template('main/createevent.html', title=_('Neue Veranstaltung - '), form=form, success=True, eventyear=form.start.data.year, eventmonth=form.start.data.month-1)
+    return render_template('main/createevent.html', title=_('Neue Veranstaltung - '), form=form, success=False)
