@@ -9,7 +9,7 @@ class EventCreationForm(FlaskForm):
     start = DateTimeLocalField(_('Beginn'), validators=[InputRequired(_('Feld muss ausgefüllt werden'))])
     end = DateTimeLocalField(_('Ende'), validators=[InputRequired(_('Feld muss ausgefüllt werden'))])
     type = SelectField(_('Veranstaltungstyp'), choices=[('public', _('Öffentliche Veranstaltung')), ('school', _('Schulveranstaltung')), ('special', _('Sonderveranstaltung')), ('misc', _('Sonstige Veranstaltung'))])
-    submit = SubmitField('Einloggen')
+    submit = SubmitField(_('Eintragen'))
 
     def validate_start(self, start):
         if start.data >= self.end.data:
