@@ -1,14 +1,14 @@
 body {
-	background-color: rgb(35, 45, 63);
+	background-color: rgb(35, 45, 63); /* #232D3F */
 	color: rgb(255, 255, 255);
 }
 
 .goldenh1 {
-	color: rgb(251, 169, 44)
+	color: rgb(251, 169, 44) /* #FBA92C */
 }
 
 .headline {
-	background-color: rgb(20, 20, 30);
+	background-color: rgb(20, 20, 30); /* #14141E */
 }
 
 .calendar-today {
