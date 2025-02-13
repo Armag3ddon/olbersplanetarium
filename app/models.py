@@ -55,6 +55,14 @@ class Right(db.Model):
     login_allowed: so.Mapped[bool] = so.mapped_column(default=True)
     # Create calendar entries
     create_calendar_entry: so.Mapped[bool] = so.mapped_column(default=False)
+    # Create users
+    create_user: so.Mapped[bool] = so.mapped_column(default=False)
+    # Edit users
+    edit_user: so.Mapped[bool] = so.mapped_column(default=False)
+    # Delete users
+    delete_user: so.Mapped[bool] = so.mapped_column(default=False)
+    # Edit rights
+    edit_rights: so.Mapped[bool] = so.mapped_column(default=False)
 
     user: so.Mapped[User] = so.relationship(back_populates='rights')
 
