@@ -1,5 +1,5 @@
-from flask import render_template, request
-from flask_login import login_required
+from flask import render_template
+from flask_login import login_required, current_user
 from flask_babel import _
 from app.main import bp
 from app import db
@@ -21,7 +21,10 @@ def startpage():
 @bp.route('/calendar', methods=['GET', 'POST'])
 @login_required
 def calendar():
-    return render_template('main/calendar.html', title=_("Kalender - "))
+    can_create = False
+    if current_user.check_right_or_admin('create_calendar_entry'):
+        can_create = True
+    return render_template('main/calendar.html', title=_("Kalender - "), can_create=can_create)
 
 # EVENT QUERYING
 @bp.route('/events/<year>/<month>', methods=['GET'])

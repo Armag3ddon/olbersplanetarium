@@ -121,15 +121,17 @@ class Calendar {
 			day.html('<div class="position-absolute top-0 start-0">'
 				+ (i - this.firstDay) +
 				'</div>');
-			day
-			.on('mouseenter', () => {
-				createButton.data("day", i - this.firstDay);
-				day.append(createButton);
-				createButton.show();
-			})
-			.on('mouseleave', () => {
-				createButton.hide();
-			});
+			if (allowCreate) {
+				day
+				.on('mouseenter', () => {
+					createButton.data("day", i - this.firstDay);
+					day.append(createButton);
+					createButton.show();
+				})
+				.on('mouseleave', () => {
+					createButton.hide();
+				});
+			}
 			// Highlight today
 			if (i - this.firstDay == this.today) {
 				day.addClass('calendar-today');
@@ -187,7 +189,6 @@ class Calendar {
 		let html = '', time, type;
 		for (let i = 0; i < events.length; i++) {
 			// Use luxon.js to parse the event time
-			console.log(events[i]);
 			time = DateTime.fromHTTP(events[i].start).setLocale(locale);
 			type = 'secondary';
 			if (events[i].public) {
