@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_babel import _
 from app.main import bp
@@ -40,6 +40,10 @@ def events(year, month):
 @bp.route('/createevent', methods=['GET', 'POST'])
 @login_required
 def createevent():
+    # Check access rights
+    if current_user.check_right_or_admin('create_calendar_entry') == False:
+        flash(_('Fehler: Keine Berechtigung zur Erstellung von Kalendereinträgen.'))
+        return redirect(url_for('main.calendar'))
     # Load form
     form = EventCreationForm()
     # Check form submission
