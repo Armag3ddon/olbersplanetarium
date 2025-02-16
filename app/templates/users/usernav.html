@@ -1,0 +1,22 @@
+{% extends 'main/main.html' %}
+{% from 'bootstrap5/nav.html' import render_nav_item %}
+
+{% block headline %}{{ _('Benutzer') }}{% endblock %}
+
+{% block divider %}
+{{ super() }}
+<div class="container">
+    <nav class="navbar navbar-expand-lg my-1" data-bs-theme="dark" aria-label='secondary'>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto border-top border-secondary">
+                <li class="nav-item bg-primarycontrast rounded-bottom mx-1">
+                    {{ render_nav_item('users.userpage', _('Übersicht')) }}
+                </li>
+                <li class="nav-item bg-primarycontrast rounded-bottom mx-1">
+                    {{ render_nav_item('users.userpage', _('Daten ändern'), edit=1) }}
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+{% endblock %}
