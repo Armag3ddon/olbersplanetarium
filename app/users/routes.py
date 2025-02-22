@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, send_from_directory, current_app
 from flask_login import login_required, current_user
 from flask_babel import _
 from app.users import bp
@@ -48,7 +48,18 @@ def userpage():
         user.lastname = form.lastname.data
         user.email = form.email.data
         user.phone = form.phone.data
-        db.session.commit()
+        avatar = form.avatar.data
+        if avatar:
+            user.set_avatar(avatar)
         flash(_('Benutzerdaten gespeichert.'))
+        db.session.commit()
         return redirect(url_for('users.userpage', user=user.id))
+    print(user.avatar)
     return render_template('users/userpage.html', title=_("Benutzerübersicht - "), user=user, edit=edit, form=form)
+
+# USER AVATARS
+@bp.route('/avatar/<path:filename>', methods=['GET'])
+@login_required
+def avatar(filename):
+    print(filename)
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], path=filename)

@@ -1,6 +1,10 @@
+from flask import flash, current_app
+from flask_babel import _
 from typing import Optional
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from datetime import datetime
+import os
 
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -21,6 +25,7 @@ class User(UserMixin, db.Model):
     email: so.Mapped[str] = so.mapped_column(sa.String(256), index=True, unique=True)
     phone: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+    avatar: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
 
     rights: so.Mapped['Right'] = so.relationship(back_populates='user')
 
@@ -32,6 +37,14 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def set_avatar(self, avatar_file):
+        filename = secure_filename(avatar_file.filename)
+        try:
+            avatar_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            self.avatar = filename
+        except Exception as e:
+            flash(_('Fehler beim Speichern des Bildes: {}').format(e))
 
     # Check if the user has a specific right
     def check_right(self, right):

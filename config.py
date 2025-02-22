@@ -14,3 +14,5 @@ class Config(object):
     BOOTSTRAP_SERVE_LOCAL = True # avoid GDPR troubles
     # Flask-babel
     LANGUAGES = ['de', 'en']
+    # Uploading avatars / profile pictures
+    UPLOAD_FOLDER = os.path.join(basedir, 'app/avatars')
