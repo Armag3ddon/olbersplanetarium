@@ -28,9 +28,10 @@ class User(UserMixin, db.Model):
     avatar: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
 
     rights: so.Mapped['Right'] = so.relationship(back_populates='user')
+    posts: so.Mapped['Post'] = so.relationship(back_populates='user')
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User {}, id: {}>'.format(self.username, self.id)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -80,7 +81,7 @@ class Right(db.Model):
     user: so.Mapped[User] = so.relationship(back_populates='rights')
 
     def __repr__(self):
-        return '<Right by {}, admin: {}>'.format(self.user_id, self.is_admin)
+        return '<Right by {}, admin: {}, id: >'.format(self.user_id, self.is_admin, self.id)
 
 # Calendar entries
 class CalendarEntry(db.Model):
@@ -95,4 +96,18 @@ class CalendarEntry(db.Model):
     misc: so.Mapped[bool] = so.mapped_column(default=False)
 
     def __repr__(self):
-        return '<CalendarEntry {}>'.format(self.title)
+        return '<CalendarEntry {}, id: {}>'.format(self.title, self.id)
+
+# Message board posts
+class Post(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    title: so.Mapped[str] = so.mapped_column(sa.String(256))
+    content: so.Mapped[str] = so.mapped_column(sa.String(1024))
+    timestamp: so.Mapped[datetime] = so.mapped_column()
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+    answer_to: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey('post.id'), index=True)
+
+    user: so.Mapped[User] = so.relationship(back_populates='posts')
+
+    def __repr__(self):
+        return '<Post {}, id: {}>'.format(self.title, self.id)
