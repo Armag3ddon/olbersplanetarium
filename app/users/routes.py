@@ -54,7 +54,6 @@ def userpage():
         flash(_('Benutzerdaten gespeichert.'))
         db.session.commit()
         return redirect(url_for('users.userpage', user=user.id))
-    print(user.avatar)
     return render_template('users/userpage.html', title=_("Benutzerübersicht - "), user=user, edit=edit, form=form)
 
 # USER AVATARS
