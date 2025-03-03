@@ -79,7 +79,7 @@
     const locale = '{{ lang }}';
     const DateTime = luxon.DateTime;
     const createButton = $('#new-event');
-	const allowCreate = {% if can_create == True %}true{% else %}false{% endif %};
+    const allowCreate = {% if can_create == True %}true{% else %}false{% endif %};
     const calendar = new Calendar(
         document.getElementById('calendar-body'),
         document.getElementById('current-month'),
