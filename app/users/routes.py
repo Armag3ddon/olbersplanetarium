@@ -60,5 +60,4 @@ def userpage():
 @bp.route('/avatar/<path:filename>', methods=['GET'])
 @login_required
 def avatar(filename):
-    print(filename)
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], path=filename)
