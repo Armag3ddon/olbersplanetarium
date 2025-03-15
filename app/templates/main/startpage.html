@@ -13,20 +13,20 @@
 <div class="container-fluid">
     <div class="row gx-4 mt-3 justify-content-around">
         <div class="col-sm-7">
-            <div class="d-flex flex-column mb-3 bg-secondary text-dark shadow rounded">
-                <div class="p-2 bg-primarycontrast text-white">
+            <div class="d-flex flex-column mb-3 bg-secondary text-black shadow rounded">
+                <div class="p-2 bg-complementary">
                     {{ _('Nachrichten') }}
                 </div>
                 <div class="p-2" id="messages">
-                    <p>Keine Nachrichten</p>
+                    <p>{{ _('Keine Nachrichten') }}</p>
                 </div>
                 {% if form %}
-                <div class="p-2">
-                    <button class="btn btn-primary btn-lg" data-bs-toggle="collapse" data-bs-target="#postcreation" role="button" aria-expanded="false" aria-controls="postcreation">
+                <div class="p-2 bg-complementary">
+                    <button class="btn btn-primarycontrast btn-lg" data-bs-toggle="collapse" data-bs-target="#postcreation" role="button" aria-expanded="false" aria-controls="postcreation">
                         {{ _('Neue Nachricht') }}
                     </button>
                 </div>
-                <div class="container collapse bg-primarycontrast text-white" id="postcreation">
+                <div class="container collapse bg-complementary" id="postcreation">
                     <div class="p-2">
                         <h4 id="newpost_header">{{ _('Neue Nachricht') }}</h4>
                         <h4 id="answer_header" style="display:none">{{ _('Antwort verfassen') }}</h4>
@@ -36,7 +36,7 @@
                         <!-- Toast UI editor -->
                     </div>
                     <div class="p-2">
-                        {{ render_form(form, id='postcreation_form') }}
+                        {{ render_form(form, id='postcreation_form', button_style='primarycontrast') }}
                     </div>
                 </div>
                 {% endif %}

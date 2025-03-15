@@ -49,7 +49,7 @@ class Messages {
 		this.parent.innerHTML = '';
 
 		if (this.singlePost) {
-			const back = $('<a>',{ class: 'btn btn-primary btn-sm ms-4', href: '/' });
+			const back = $('<a>',{ class: 'btn btn-primarycontrast btn-sm ms-4', href: '/' });
 			back.html(backToPosts);
 			fragment.appendChild(back.get(0));
 		}
@@ -73,7 +73,7 @@ class Messages {
 						fragment.appendChild(answer);
 					} else {
 						if (counter == 2) {
-							const loadmore = $('<a>',{ class: 'btn btn-primary btn-sm ms-4', href: '/?post=' + messages.posts[i].id });
+							const loadmore = $('<a>',{ class: 'btn btn-primarycontrast btn-sm ms-4', href: '/?post=' + messages.posts[i].id });
 							loadmore.html(loadMoreAnswers);
 							fragment.appendChild(loadmore.get(0));
 						}
@@ -115,17 +115,17 @@ class Messages {
 		}
 		if (answerable) {
 			answer_button =
-			`<button type="button" class="btn btn-primary float-end" onclick="createAnswer(${message.id})">
+			`<button type="button" class="btn btn-primarycontrast float-end" onclick="createAnswer(${message.id})">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
 					<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5"></path>
 				</svg>
 			</button>`;
 		}
 		messageContainer.html(`
-			<div class="hstack justify-content-md-center">
+			<div class="hstack justify-content-md-center bg-complementary mb-1">
 				${indent}
-				<div class="card mb-1" style="width: 100%;">
-					<div class="card-body py-0">
+				<div class="card" style="width: 100%;">
+					<div class="card-body py-0 lh-sm">
 						<img src="${avatar}" class="img-fluid border rounded-circle border-3 border-light float-end" style="max-width:50px" alt="${message.author}">
 						${title}
 						${content}
