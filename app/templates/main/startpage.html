@@ -1,17 +1,45 @@
 {% extends 'main/main.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% from 'bootstrap5/utils.html' import render_icon %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/toastui-editor.min.css') }}">
+{% endblock %}
 
 {% block headline %}{{ _('Startseite') }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="row gx-4 mt-3 justify-content-around">
-        <div class="col-sm-4">
-            <div class="card p-3 shadow rounded">
-                <div class="card-header">
-                    {{ _('Aktuelle Nachrichten') }}
+        <div class="col-sm-7">
+            <div class="d-flex flex-column mb-3 bg-secondary text-dark shadow rounded">
+                <div class="p-2 bg-primarycontrast text-white">
+                    {{ _('Nachrichten') }}
                 </div>
-                <div class="card-body">
+                <div class="p-2" id="messages">
+                    <p>Keine Nachrichten</p>
                 </div>
+                {% if form %}
+                <div class="p-2">
+                    <button class="btn btn-primary btn-lg" data-bs-toggle="collapse" data-bs-target="#postcreation" role="button" aria-expanded="false" aria-controls="postcreation">
+                        {{ _('Neue Nachricht') }}
+                    </button>
+                </div>
+                <div class="container collapse bg-primarycontrast text-white" id="postcreation">
+                    <div class="p-2">
+                        <h4 id="newpost_header">{{ _('Neue Nachricht') }}</h4>
+                        <h4 id="answer_header" style="display:none">{{ _('Antwort verfassen') }}</h4>
+                    </div>
+                    
+                    <div class="p-2" id="editor">
+                        <!-- Toast UI editor -->
+                    </div>
+                    <div class="p-2">
+                        {{ render_form(form, id='postcreation_form') }}
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-sm-4">
@@ -25,4 +53,50 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/messages.js') }}"></script>
+<script src="{{ url_for('static', filename='js/general.js') }}"></script>
+<script src="{{ url_for('static', filename='js/luxon.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-3.7.1.js') }}"></script>
+<script src="{{ url_for('static', filename='js/markdown-it.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/toastui-editor-all.min.js') }}"></script>
+<script>
+    const locale = '{{ lang }}';
+    const DateTime = luxon.DateTime;
+    const parser = new markdownit({
+        breaks: true,
+        linkify: true,
+        typographer: true,
+        quotes: '„“‚‘',
+    });
+    const default_avatar = "{{ url_for('static', filename='img/default_profile.png') }}";
+    const avatar_url = "{{ url_for('users.avatar', filename='') }}";
+    const loadMoreAnswers = `{{ _('Mehr Antworten laden') }} {{ render_icon('box-arrow-up-right') }}`;
+    const backToPosts = `{{ _('Zurück zu den Nachrichten') }} {{ render_icon('box-arrow-left') }}`;
+    const messages = new Messages(
+        document.getElementById('messages'),
+    );
+    messages.setup();
+    {% if form %}
+    const editor = new toastui.Editor({
+        el: document.getElementById('editor'),
+        initialEditType: 'wysiwyg',
+        previewStyle: 'vertical',
+        height: '300px',
+        usageStatistics: false,
+        toolbarItems: [
+            ['heading', 'bold', 'italic', 'strike'],
+            ['quote', 'code'],
+            ['link'],
+        ]
+    });
+    $('#postcreation_form').on('submit', () => {
+        $('#content').val(editor.getMarkdown());
+    });
+    {% endif %}
+</script>
+
 {% endblock %}
