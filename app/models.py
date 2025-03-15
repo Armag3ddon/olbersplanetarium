@@ -75,8 +75,14 @@ class Right(db.Model):
     edit_user: so.Mapped[bool] = so.mapped_column(default=False)
     # Delete users
     delete_user: so.Mapped[bool] = so.mapped_column(default=False)
-    # Edit rights
+    # Edit user rights
     edit_rights: so.Mapped[bool] = so.mapped_column(default=False)
+    # Create posts
+    create_post: so.Mapped[bool] = so.mapped_column(default=True)
+    # Edit foreign posts
+    edit_foreign_post: so.Mapped[bool] = so.mapped_column(default=False)
+    # Delete foreign posts
+    delete_foreign_post: so.Mapped[bool] = so.mapped_column(default=False)
 
     user: so.Mapped[User] = so.relationship(back_populates='rights')
 
