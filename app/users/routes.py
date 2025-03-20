@@ -56,6 +56,16 @@ def userpage():
         return redirect(url_for('users.userpage', user=user.id))
     return render_template('users/userpage.html', title=_("Benutzerübersicht - "), user=user, edit=edit, form=form)
 
+# USERLIST
+@bp.route('/userlist/<page>', methods=['GET'])
+@login_required
+def userlist(page):
+    query = sa.Select(User).order_by(User.id)
+    users = db.paginate(query, page=int(page), per_page=50, error_out=False)
+    next_url = url_for('users.userlist', page=users.next_num) if users.has_next else None
+    prev_url = url_for('users.userlist', page=users.prev_num) if users.has_prev else None
+    return render_template('users/userlist.html', title=_("Benutzerliste - "), users=users.items, next_url=next_url, prev_url=prev_url)
+
 # USER AVATARS
 @bp.route('/avatar/<path:filename>', methods=['GET'])
 @login_required
