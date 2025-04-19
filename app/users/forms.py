@@ -1,9 +1,42 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
-from wtforms import StringField, HiddenField, SubmitField
+from wtforms import StringField, HiddenField, SubmitField, BooleanField
 from wtforms.validators import ValidationError, Length, Email, DataRequired
 from flask_babel import _
 from app.models import User
+
+class UserCreateForm(FlaskForm):
+    username = StringField(_('Benutzername'), validators=[Length(max=128, message=_('Der Benutzername darf maximal 128 Zeichen lang sein.'))])
+    firstname = StringField(_('Vorname'), validators=[Length(max=256, message=_('Maximal 256 Zeichen für Vorname(n) erlaubt.'))])
+    lastname = StringField(_('Nachname'), validators=[Length(max=256, message=_('Maximal 256 Zeichen für Nachname(n) erlaubt.'))])
+    email = StringField(_('E-Mail-Adresse'), validators=[Length(max=256, message=_('Die E-Mail-Adresse darf maximal 256 Zeichen lang sein.')), Email(_('Ungültige E-Mail-Adresse'))])
+    phone = StringField(_('Telefonnummer'), validators=[Length(max=256, message=_('Die Telefonnummer darf maximal 256 Zeichen lang sein.'))])
+
+    is_admin = BooleanField(_('Administrator'), default=False)
+    login_allowed = BooleanField(_('Darf sich einloggen'), default=True)
+    create_calendar_entry = BooleanField(_('Darf Kalendereinträge anlegen'), default=False)
+    create_user = BooleanField(_('Darf Benutzer anlegen'), default=False)
+    edit_user = BooleanField(_('Darf Benutzer bearbeiten'), default=False)
+    delete_user = BooleanField(_('Darf Benutzer löschen'), default=False)
+    edit_rights = BooleanField(_('Darf Benutzerrechte bearbeiten'), default=False)
+    create_post = BooleanField(_('Darf Nachrichten schreiben'), default=True)
+    edit_foreign_post = BooleanField(_('Darf fremde Nachrichten bearbeiten'), default=False)
+    delete_foreign_post = BooleanField(_('Darf fremde Nachrichten löschen'), default=False)
+
+    submit = SubmitField(_('Benutzer anlegen'))
+
+    def validate_username(self, username):
+        if username.data.strip(' \t\n\r') == '':
+            raise ValidationError(_('Der Benutzername darf nicht leer sein.'))
+
+    def validate_email(self, email):
+        if email.data.strip(' \t\n\r') == '':
+            raise ValidationError(_('Die E-Mail-Adresse darf nicht leer sein.'))
+        check_email = User.query.filter_by(email=email.data).first()
+        if check_email is not None:
+            self.email.errors.append(_('Diese E-Mail-Adresse ist bereits registriert.'))
+            return False
+        return True
 
 class UserEditForm(FlaskForm):
     id = HiddenField(validators=[DataRequired(_('Benutzer-ID nicht übertragen.')), ])

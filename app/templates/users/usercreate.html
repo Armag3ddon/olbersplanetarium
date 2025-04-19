@@ -1,0 +1,65 @@
+{% extends 'users/usernav.html' %}
+{% from 'bootstrap5/form.html' import render_field %}
+
+{% block headline %}{{ _('Neuer Benutzeraccount') }}{% endblock %}
+
+{% block content %}
+<div class="container justify-content-center">
+    <div class="card bg-complementary p-2" style="max-width: 1000px;">
+        <div class="row justify-content-center">
+            <img src="{{ url_for('static', filename='img/default_profile.png') }}" class="img-fluid" alt="{{ _('Neuer Benutzer') }}" style="max-width: 100px;">
+        </div>
+        <form action method="post" class="form row g-3" role="form">
+        {{ form.csrf_token() }}
+            <div class="col-md-12">
+                {{ render_field(form.username) }}
+            </div>
+            <div class="col-md-6">
+                {{ render_field(form.firstname) }}
+            </div>
+            <div class="col-md-6">
+                {{ render_field(form.lastname) }}
+            </div>
+            <div class="col-md-12">
+                {{ render_field(form.email) }}
+            </div>
+            <div class="col-md-12">
+                {{ render_field(form.phone) }}
+            </div>
+            <div class="col-md-6">
+                {{ render_field(form.login_allowed) }}
+            </div>
+            <div class="col-md-6">
+                {{ render_field(form.is_admin) }}
+            </div>
+            <div class="col-md-3">
+                {{ render_field(form.create_calendar_entry) }}
+            </div>
+            <div class="col-md-3">
+                {{ render_field(form.create_user) }}
+            </div>
+            <div class="col-md-3">
+                {{ render_field(form.edit_user) }}
+            </div>
+            <div class="col-md-3">
+                {{ render_field(form.delete_user) }}
+            </div>
+            <div class="col-md-3">
+                {{ render_field(form.edit_rights) }}
+            </div>
+            <div class="col-md-3">
+                {{ render_field(form.create_post) }}
+            </div>
+            <div class="col-md-3">
+                {{ render_field(form.edit_foreign_post) }}
+            </div>
+            <div class="col-md-3">
+                {{ render_field(form.delete_foreign_post) }}
+            </div>
+            <div class="col-md-12">
+                {{ render_field(form.submit) }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

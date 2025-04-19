@@ -18,6 +18,11 @@
                 <li class="nav-item bg-primarycontrast rounded-bottom mx-1">
                     {{ render_nav_item('users.userlist', _('Benutzerliste'), page=0) }}
                 </li>
+                {% if rights['create_users'] %}
+                <li class="nav-item bg-primarycontrast rounded-bottom mx-1">
+                    {{ render_nav_item('users.usercreate', _('Neuer Benutzeraccount')) }}
+                </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
