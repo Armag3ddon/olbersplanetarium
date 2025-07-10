@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap5
 from flask_babel import Babel
 from flask_login import LoginManager
+from flask_mail import Mail
 
 # For babel: get preferred language
 def get_locale():
@@ -16,6 +17,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 babel = Babel()
 login = LoginManager()
+mail = Mail()
 
 # Create the app, called in 
 def create_app(config_class=Config):
@@ -29,6 +31,7 @@ def create_app(config_class=Config):
     babel.init_app(app, default_locale='de', locale_selector=get_locale)
     login.init_app(app)
     login.login_view = 'auth.login'
+    mail.init_app(app)
 
     # Load error handling blueprint
     from app.errors import bp as errors_bp

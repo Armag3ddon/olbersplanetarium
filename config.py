@@ -16,3 +16,12 @@ class Config(object):
     LANGUAGES = ['de', 'en']
     # Uploading avatars / profile pictures
     UPLOAD_FOLDER = os.path.join(basedir, 'app/avatars')
+    # Flask-mail
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT'))
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') == 'True'
+    MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL') == 'True'
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_DEBUG = os.environ.get('MAIL_DEBUG') == 'True'
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER') or 'noreply@nothig.com'
