@@ -16,11 +16,11 @@ def generate_token(email, secret_key, salt):
 def verify_token(token, secret_key, salt, expiration):
     s = URLSafeTimedSerializer(secret_key)
     try:
-        return s.loads(token, salt=salt, max_age=expiration)
+        return True, s.loads(token, salt=salt, max_age=expiration)
     except SignatureExpired:
-        return _('Fehler: der Sicherheitstoken ist nicht mehr gültig.')  # Token has expired
+        return False, _('Fehler: der Sicherheitstoken ist nicht mehr gültig.')  # Token has expired
     except BadSignature:
-        return _('Fehler: der Sicherheitstoken ist nicht gültig.')  # Invalid token
+        return False, _('Fehler: der Sicherheitstoken ist nicht gültig.')  # Invalid token
 
 def send_email(to, subject, template, **kwargs):
     msg = Message(subject, recipients=[to], sender=Config.MAIL_DEFAULT_SENDER)

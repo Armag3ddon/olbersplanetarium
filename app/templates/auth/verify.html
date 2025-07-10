@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+<hr class="my-1">
+<div class="container-fluid">
+    <div class="row my-1"></div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">{{ _('Passwort einrichten') }}</h1>
+                <p class="card-text">
+                    {{ _('Bitte richte dir ein Passwort für deinen Account ein. Der Login funktioniert erst, wenn ein Passwort gesetzt wurde.') }}<br>
+                    {{ _('Aus Sicherheitsgründen sollte das Passwort mindestens die folgenden Kriterien erfüllen - es darf diese aber gerne übertreffen:') }}<br>
+                </p>
+                <ul>
+                    <li>{{ _('Mindestens 8 Zeichen lang') }}</li>
+                    <li>{{ _('Enthält mindestens einen Großbuchstaben') }}</li>
+                    <li>{{ _('Enthält mindestens einen Kleinbuchstaben') }}</li>
+                    <li>{{ _('Enthält mindestens eine Zahl') }}</li>
+                    <li>{{ _('Enthält mindestens ein Sonderzeichen') }}</li>
+                </ul>
+                {{ render_form(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -5,6 +5,7 @@ from app.users import bp
 from app import db
 from app.models import User, Right
 from app.users.forms import UserEditForm, UserCreateForm
+from app.mail.mail_utils import generate_token, send_email
 import sqlalchemy as sa
 
 # USERPAGE
@@ -107,8 +108,20 @@ def usercreate():
         )
         db.session.add(rights)
         db.session.commit()
+        flash_message = _('Benutzer {} erstellt.'.format(user.username))
 
-        flash(_('Benutzer {} erstellt.'.format(user.username)))
+        # Create and send the registration token
+        token = generate_token(form.email.data, current_app.config['SECRET_KEY'], 'email-registration')
+        verify_url = url_for('auth.verify', token=token, _external=True)
+        report = send_email(
+            to=form.email.data,
+            subject=_('Willkommen beim Olbers Planetarium'),
+            template='auth/mail_registration',
+            verify_url=verify_url
+        )
+        flash_message += report
+
+        flash(flash_message)
         return redirect(url_for('users.userlist', page=1))
     return render_template('users/usercreate.html', title=_("Benutzer erstellen - "), form=form, rights=rights)
 
