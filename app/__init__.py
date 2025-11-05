@@ -55,6 +55,9 @@ def create_app(config_class=Config):
     def utility_processor():
         return dict(lang=get_locale())
 
+    # Change login required message
+    login.LOGIN_MESSAGE = 'Dieser Bereich erfordert eine Anmeldung.'
+
     return app
 
 from app import models
