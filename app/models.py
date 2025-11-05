@@ -26,6 +26,8 @@ class User(UserMixin, db.Model):
     phone: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     avatar: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+    is2fa_enabled: so.Mapped[bool] = so.mapped_column(default=False)
+    token_2fa: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64), unique=True)
 
     rights: so.Mapped['Right'] = so.relationship(back_populates='user')
     posts: so.Mapped['Post'] = so.relationship(back_populates='user')
@@ -35,6 +37,7 @@ class User(UserMixin, db.Model):
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+        return True
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+<hr class="my-1">
+<div class="container-fluid">
+    <div class="row my-1"></div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">{{ _('Zwei-Faktor-Authentifizierung') }}</h1>
+                <p class="card-text">
+                    {{ _('Bitte jetzt das aktuelle OTP eingeben, um den Login abzuschließen:') }}<br>
+                </p>
+                {{ render_form(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

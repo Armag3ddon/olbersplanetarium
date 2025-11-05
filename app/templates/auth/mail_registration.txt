@@ -1,0 +1,5 @@
+{{ _('Registrierung in der Datenbank des Olbers Planetarium') }}
+
+{{ _('Moin!') }}
+{{ _('Bitte die folgende URL benutzen, um die Registrierung abzuschließen. Es muss ein Passwort eingerichtet werden:') }}
+{{ verify_url }}

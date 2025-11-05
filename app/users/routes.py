@@ -4,9 +4,10 @@ from flask_babel import _
 from app.users import bp
 from app import db
 from app.models import User, Right
-from app.users.forms import UserEditForm, UserCreateForm
-from app.mail.mail_utils import generate_token, send_email
+from app.users.forms import UserEditForm, UserDeleteForm, UserCreateForm
+from app.email.mail_utils import generate_token, send_email
 import sqlalchemy as sa
+import pyotp
 
 # USERPAGE
 @bp.route('/user', methods=['GET', 'POST'])
@@ -14,6 +15,10 @@ import sqlalchemy as sa
 def userpage():
     id = request.args.get('user')
     rights = get_user_rights()
+    # This will be set to true if the user id not found
+    # In this case the id will default to the current user
+    # This could lead to erroneous deletion or alteration of own user
+    error_prevention = False
     # Default: look at oneself
     if not id:
         id = current_user.id
@@ -24,18 +29,20 @@ def userpage():
         if user is None:
             flash(_('Fehler: Benutzer (ID: {}) nicht gefunden.'.format(id)))
             user = current_user
+            error_prevention = True
     # User editing
     edit = False
-    form = None
+    editform = None
+    deleteform = None
     # Check access rights
     if edit and id != current_user.id:
         if rights['edit_users'] == False:
             flash(_('Fehler: Keine Berechtigung zur Bearbeitung von fremden Benutzern.'))
             edit = False
     # Load edit form and populate with default values
-    if request.args.get('edit'):
+    if request.args.get('edit') and not error_prevention:
         edit = True
-        form = UserEditForm(
+        editform = UserEditForm(
             id=user.id,
             username=user.username,
             firstname=user.firstname,
@@ -43,20 +50,34 @@ def userpage():
             email=user.email,
             phone=user.phone
         )
+        if rights['delete_users']:
+            deleteform = UserDeleteForm()
     # Save user values
-    if form and form.validate_on_submit():
-        user.username = form.username.data
-        user.firstname = form.firstname.data
-        user.lastname = form.lastname.data
-        user.email = form.email.data
-        user.phone = form.phone.data
-        avatar = form.avatar.data
+    if editform and editform.submit.data and editform.validate_on_submit():
+        user.username = editform.username.data
+        user.firstname = editform.firstname.data
+        user.lastname = editform.lastname.data
+        user.email = editform.email.data
+        user.phone = editform.phone.data
+        avatar = editform.avatar.data
         if avatar:
             user.set_avatar(avatar)
         flash(_('Benutzerdaten gespeichert.'))
         db.session.commit()
         return redirect(url_for('users.userpage', user=user.id))
-    return render_template('users/userpage.html', title=_("Benutzerübersicht - "), user=user, edit=edit, form=form, rights=rights)
+    # Delete user
+    if deleteform and deleteform.submitdelete.data and deleteform.validate_on_submit():
+        if user.id == current_user.id:
+            flash(_('Fehler: Du kannst dich nicht selbst löschen!'))
+            return redirect(url_for('users.userpage', user=user.id))
+        # Purge rights
+        db.session.query(Right).filter(Right.user_id == user.id).delete()
+        # Delete user
+        db.session.delete(user)
+        db.session.commit()
+        flash(_('Benutzer {} gelöscht.'.format(user.username)))
+        return redirect(url_for('users.userlist', page=1))
+    return render_template('users/userpage.html', title=_("Benutzerübersicht - "), user=user, edit=edit, editform=editform, deleteform=deleteform, rights=rights)
 
 # USERLIST
 @bp.route('/userlist/<page>', methods=['GET'])
@@ -87,7 +108,8 @@ def usercreate():
             firstname=form.firstname.data,
             lastname=form.lastname.data,
             email=form.email.data,
-            phone=form.phone.data
+            phone=form.phone.data,
+            token_2fa=pyotp.random_base32()
         )
         db.session.add(user)
         db.session.commit()
