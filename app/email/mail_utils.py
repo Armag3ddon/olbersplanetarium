@@ -2,12 +2,13 @@
 # E-mail sending
 #
 
-from flask import render_template
+from flask import render_template, current_app
 from flask_mail import Message
 from flask_babel import _
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from app import mail
 from config import Config
+from threading import Thread
 
 def generate_token(email, secret_key, salt):
     s = URLSafeTimedSerializer(secret_key)
@@ -27,7 +28,11 @@ def send_email(to, subject, template, **kwargs):
     msg.body = render_template(template + '.txt', **kwargs)
     msg.html = render_template(template + '.html', **kwargs)
     try:
-        mail.send(msg)
+        Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
     except Exception as e:
-        return _('Fehler beim Senden der E-Mail: {}').format(str(e))
-    return _('E-Mail erfolgreich gesendet an {}.').format(to)
+        return _(' Fehler beim Senden der E-Mail: {}').format(str(e))
+    return _(' E-Mail wird versendet an {}.').format(to)
+
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
