@@ -66,3 +66,7 @@ class UserEditForm(FlaskForm):
     def validate_username(self, username):
         if username.data.strip(' \t\n\r') == '':
             raise ValidationError(_('Der Benutzername darf nicht leer sein.'))
+
+class UserDeleteForm(FlaskForm):
+    safety = BooleanField(_('Ich bin mir sicher, dass ich diesen Benutzer löschen möchte.'), validators=[DataRequired(_('Du musst bestätigen, dass du den Benutzer löschen möchtest.'))])
+    submitdelete = SubmitField(_('Benutzer löschen'))
