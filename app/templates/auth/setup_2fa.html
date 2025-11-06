@@ -11,6 +11,7 @@
         <div class="card">
             <div class="card-body">
                 <h1 class="card-title">{{ _('Zwei-Faktor-Authentifizierung einrichten') }}</h1>
+                <h5>{{ _('Benutzername: ' + username) }}</h5>
                 <p class="card-text">
                     {{ _('Wenn du noch keine Authenticator App hast, muss zunächst eine eingerichtet werden. iPhones sollten dies von Haus können, unter Android kann z.B. der Google Authenticator genutzt werden.') }}<br>
                     {{ _('Download des Google Authenticators:') }} <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=de&gl=US" target="_blank">Google Play Store</a>, <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">{{ _('hier im Play Store') }}</a>.<br>
@@ -18,7 +19,7 @@
                     {{ _('Anschließend musst du den 6-stelligen Code aus der App hier eingeben, um die Einrichtung abzuschließen.') }}<br>
                 </p>
                 <div class="text-center">
-                    <img src="data:image/png;base64, {{ qr_image }}" alt="{{ _('Hier sollte ein QR-Code stehen. Wenn dieser nicht angezeigt wird, muss der Code manuell in eine Authenticator App eingegeben werden.') }}" style="width:200px;height:200px"/>
+                    <img src="{{ qr_code }}" alt="{{ _('Hier sollte ein QR-Code stehen. Wenn dieser nicht angezeigt wird, muss der Code manuell in eine Authenticator App eingegeben werden.') }}" style="width:200px;height:200px"/>
                     <form>
                         <label for="secret">{{ _('Manueller Code zum Kopieren:') }}</label>
                         <input type="text" id="secret" class="form-control text-center" value="{{ secret }}" readonly>
