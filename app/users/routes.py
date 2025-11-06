@@ -71,6 +71,7 @@ def userpage():
     # Generate new 2FA secret
     if change2faform and change2faform.submitnew2fa.data and change2faform.validate_on_submit():
         user.token_2fa = pyotp.random_base32()
+        user.is2fa_enabled = False
         flash(_('Neues Geheimnis für die Zwei-Faktor-Authentifizierung generiert. Bitte richte 2FA erneut ein.'))
         db.session.commit()
         return redirect(url_for('auth.setup_2fa', user=user.id))
