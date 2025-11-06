@@ -78,7 +78,7 @@ def verify():
         flash(_('Passwort erfolgreich gesetzt! Du kannst dich jetzt einloggen.'))
         login_user(user)
         if form.tfa.data:
-            return redirect(url_for('auth.setup-2fa'))
+            return redirect(url_for('auth.setup_2fa'))
         return redirect(url_for('main.startpage'))
     return render_template('auth/verify.html', title=_('Verifizierung'), form=form)
 
@@ -86,19 +86,29 @@ def verify():
 @bp.route('/setup-2fa', methods=['GET', 'POST'])
 @login_required
 def setup_2fa():
-    secret = current_user.token_2fa
-    uri = pyotp.totp.TOTP(secret).provisioning_uri(name = current_user.username, issuer_name=current_app.config['APP_NAME'])
+    id = request.args.get('user')
+    # Default: look at oneself
+    if not id:
+        id = current_user.id
+    user = current_user
+    if id != current_user.id:
+        if not current_user.check_right_or_admin('edit_user'):
+            flash(_('Du hast keine Berechtigung, die 2FA für andere Benutzer einzurichten!'))
+            return redirect(url_for('main.startpage'))
+        user = db.session.scalar(sa.select(User).where(User.id == id))
+    secret = user.token_2fa
+    uri = pyotp.totp.TOTP(secret).provisioning_uri(name = user.username, issuer_name=current_app.config['APP_NAME'])
     qr_code = generate_qr_code(uri)
     form = TwoFactorSetupForm()
     if form.validate_on_submit():
         if not pyotp.TOTP(secret).verify(form.token.data):
             flash(_('Ungültiger OTP! Bitte versuche es erneut.'))
-            return render_template('auth/setup_2fa.html', title=_('2FA einrichten'), qr_code=qr_code, secret=secret, form=form)
-        current_user.is2fa_enabled = True
+            return render_template('auth/setup_2fa.html', title=_('2FA einrichten'), qr_code=qr_code, secret=secret, form=form, username=user.username)
+        user.is2fa_enabled = True
         db.session.commit()
         flash(_('Zwei-Faktor-Authentifizierung erfolgreich eingerichtet!'))
         return redirect(url_for('main.startpage'))
-    return render_template('auth/setup_2fa.html', title=_('2FA einrichten'), qr_code=qr_code, secret=secret, form=form)
+    return render_template('auth/setup_2fa.html', title=_('2FA einrichten'), qr_code=qr_code, secret=secret, form=form, username=user.username)
 
 # VERIFYING TWO FACTOR AUTHENTICATION
 @bp.route('/verify-2fa', methods=['GET', 'POST'])

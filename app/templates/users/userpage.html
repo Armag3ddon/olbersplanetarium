@@ -30,6 +30,17 @@
             <div class="card-body">
                 <h5 class="card-title">{{ _('Bearbeiten:') }}</h5>
                 {{ render_form(editform) }}
+                <br />
+                <h5 class="card-title">{{ _('Authentifizierung:') }}</h5>
+                <p class="card-text">{{ _('Zwei-Faktor-Authentifizierung neu einrichten: ') }}</p>
+                <a href="{{ url_for('auth.setup_2fa', user=user.id) }}"><button class="btn btn-primary btn-md">Hier klicken</button></a>
+            </div>
+        </div>
+    </div>
+    <div class="row my-2 justify-content-center">
+        <div class="card bg-danger" style="max-width: 800px;">
+            <div class="card-body">
+                <h5 class="card-title">{{ _('Benutzer löschen:') }}</h5>
                 {{ render_form(deleteform) }}
             </div>
         </div>
