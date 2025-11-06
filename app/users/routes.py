@@ -88,7 +88,7 @@ def userlist(page):
     users = db.paginate(query, page=int(page), per_page=50, error_out=False)
     next_url = url_for('users.userlist', page=users.next_num) if users.has_next else None
     prev_url = url_for('users.userlist', page=users.prev_num) if users.has_prev else None
-    return render_template('users/userlist.html', title=_("Benutzerliste - "), users=users.items, next_url=next_url, prev_url=prev_url, rights=rights)
+    return render_template('users/userlist.html', title=_("Benutzerliste - "), users=users.items, next_url=next_url, prev_url=prev_url, rights=rights, can_edit=rights['delete_users'])
 
 # USER CREATION
 @bp.route('/usercreate', methods=['GET', 'POST'])

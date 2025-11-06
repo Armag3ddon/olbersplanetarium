@@ -1,5 +1,7 @@
 {% extends 'users/usernav.html' %}
 
+{% from 'bootstrap5/utils.html' import render_icon %}
+
 {% block headline %}{{ _('Benutzerliste') }}{% endblock %}
 
 {% block content %}
@@ -20,6 +22,7 @@
                         <td><a href="{{ url_for('users.userpage', user=user.id) }}">{{ user.username }}</a></td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
+                        {% if can_edit %}<td><a href="{{ url_for('users.userpage', user=user.id, edit=1) }}" title="{{ _('Daten bearbeiten') }}"><span class="badge text-bg-secondary">{{ render_icon('pencil-fill') }}</span></a></td>{% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
