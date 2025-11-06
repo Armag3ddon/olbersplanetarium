@@ -26,7 +26,7 @@ def create_app(config_class=Config):
 
     # Initiate modules
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, render_as_batch=True)
     bootstrap.init_app(app)
     babel.init_app(app, default_locale='de', locale_selector=get_locale)
     login.init_app(app)
