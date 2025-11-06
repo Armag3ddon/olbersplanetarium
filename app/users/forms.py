@@ -70,3 +70,7 @@ class UserEditForm(FlaskForm):
 class UserDeleteForm(FlaskForm):
     safety = BooleanField(_('Ich bin mir sicher, dass ich diesen Benutzer löschen möchte.'), validators=[DataRequired(_('Du musst bestätigen, dass du den Benutzer löschen möchtest.'))])
     submitdelete = SubmitField(_('Benutzer löschen'))
+
+class GenerateNew2FAForm(FlaskForm):
+    safety2fa = BooleanField(_('Ich bin mir sicher, dass ich ein neues 2FA-Geheimnis generieren möchte.'), validators=[DataRequired(_('Du musst bestätigen, dass du das Geheimnis neu erzeugen möchtest.'))])
+    submitnew2fa = SubmitField(_('Neues Geheimnis generieren'))

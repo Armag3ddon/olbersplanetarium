@@ -38,6 +38,15 @@
         </div>
     </div>
     <div class="row my-2 justify-content-center">
+        <div class="card bg-warning" style="max-width: 800px;">
+            <div class="card-body">
+                <h5 class="card-title">{{ _('Neues Geheimnis für Zwei-Faktor-Authentifizierung generieren:') }}</h5>
+                <p class="card-text">{{ _('Achtung! Hiernach wird die Zwei-Faktor-Authentifizierung zunächst einmal deaktiviert und muss neu eingerichtet werden!') }}</p>
+                {{ render_form(change2faform) }}
+            </div>
+        </div>
+    </div>
+    <div class="row my-2 justify-content-center">
         <div class="card bg-danger" style="max-width: 800px;">
             <div class="card-body">
                 <h5 class="card-title">{{ _('Benutzer löschen:') }}</h5>
