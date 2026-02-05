@@ -4,7 +4,7 @@ from flask_babel import _
 from app.calendar import bp
 from app.models import CalendarEntry
 from app import db
-from app.main.forms import EventCreationForm
+from app.calendar.forms import EventCreationForm
 import calendar as cal
 import sqlalchemy as sa
 
@@ -18,7 +18,7 @@ def calendar():
     can_create = False
     if current_user.check_right_or_admin('create_calendar_entry'):
         can_create = True
-    return render_template('main/calendar.html', title=_("Kalender - "), can_create=can_create)
+    return render_template('calendar/calendar.html', title=_("Kalender - "), can_create=can_create)
 
 # EVENT QUERYING
 @bp.route('/events/<year>/<month>', methods=['GET'])
@@ -37,7 +37,7 @@ def createevent():
     # Check access rights
     if current_user.check_right_or_admin('create_calendar_entry') == False:
         flash(_('Fehler: Keine Berechtigung zur Erstellung von Kalendereinträgen.'))
-        return redirect(url_for('main.calendar'))
+        return redirect(url_for('calendar.calendar'))
     # Load form
     form = EventCreationForm()
     # Check form submission
@@ -58,5 +58,5 @@ def createevent():
         event = CalendarEntry(title=form.title.data, description=form.description.data, start=form.start.data, end=form.end.data, public=public, school=school, special=special, misc=misc)
         db.session.add(event)
         db.session.commit()
-        return render_template('main/createevent.html', title=_('Neue Veranstaltung - '), form=form, success=True, eventyear=form.start.data.year, eventmonth=form.start.data.month-1)
-    return render_template('main/createevent.html', title=_('Neue Veranstaltung - '), form=form, success=False)
+        return render_template('calendar/createevent.html', title=_('Neue Veranstaltung - '), form=form, success=True, eventyear=form.start.data.year, eventmonth=form.start.data.month-1)
+    return render_template('calendar/createevent.html', title=_('Neue Veranstaltung - '), form=form, success=False)
