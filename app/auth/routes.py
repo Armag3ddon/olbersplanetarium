@@ -10,6 +10,9 @@ from app.email.mail_utils import verify_token
 from app.misc.utils import generate_qr_code
 import pyotp
 
+# PAGES FOR AUTHENTICATION
+# LOGIN, LOGOUT, 2FA VERIFICATION, 2FA SETUP
+
 # LOGIN
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
