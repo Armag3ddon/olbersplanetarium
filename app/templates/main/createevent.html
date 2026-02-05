@@ -9,7 +9,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ _('Veranstaltung wurde erfolgreich erstellt.') }}</h5>
-            <a href="{{ url_for('main.calendar', year=eventyear, month=eventmonth) }}" class="card-link">{{ _('Hier klicken, um zum Kalendar zurückzukehren') }}</a>
+            <a href="{{ url_for('calendar.calendar', year=eventyear, month=eventmonth) }}" class="card-link">{{ _('Hier klicken, um zum Kalendar zurückzukehren') }}</a>
         </div>
     </div>
 </div>
