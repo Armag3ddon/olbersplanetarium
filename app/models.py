@@ -103,9 +103,21 @@ class CalendarEntry(db.Model):
     school: so.Mapped[bool] = so.mapped_column(default=False)
     special: so.Mapped[bool] = so.mapped_column(default=False)
     misc: so.Mapped[bool] = so.mapped_column(default=False)
+    # These entries block the planetarium room
+    blocking: so.Mapped[bool] = so.mapped_column(default=True)
+    # If part of a multi day entry, this links to the series
+    series_id: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey('calendar_series.id'), index=True)
 
     def __repr__(self):
         return '<CalendarEntry {}, id: {}>'.format(self.title, self.id)
+
+# Helper for multi day calendar entries
+class CalendarSeries(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    entries: so.Mapped[list[CalendarEntry]] = so.relationship(back_populates='series_id')
+
+    def __repr__(self):
+        return '<CalendarSeries {}, id: {}>'.format(self.title, self.id)
 
 # Message board posts
 class Post(db.Model):
