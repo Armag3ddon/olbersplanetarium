@@ -4,38 +4,56 @@ Create and render a calendar view
 
 */
 
+// Calendar class
 class Calendar {
 	constructor(parent, month_display, year_display) {
+		// HTML DOM element that holds the calendar
 		this.parent = parent;
+		// DOM element showing the currently selected month
 		this.month_display = month_display;
+		// DOM element showing the currently selected year
 		this.year_display = year_display;
+		// Get year and month from query parameters
 		this.getQueryParams = new URLSearchParams(window.location.search);
 	}
 
 	// Set up the calendar
 	setup() {
+		// Set up month and year to display
 		this.checkQueryParams();
+		// Set the month to display
 		this.setMonthOfYear(parseInt(this.getQueryParams.get('year')), parseInt(this.getQueryParams.get('month')));
+		// Query the server for events and render the calendar
 		this.getEvents();
 	}
 
+	// Next month button clicked
 	nextMonth() {
+		// Currently showing December
 		if (this.month == 11) {
+			// Move to next year and January
 			this.getQueryParams.set('year', parseInt(this.getQueryParams.get('year')) + 1);
 			this.getQueryParams.set('month', 0);
 		} else {
+			// Show next month
 			this.getQueryParams.set('month', parseInt(this.getQueryParams.get('month')) + 1);
 		}
+		// Rerun setup
 		this.setup();
 	}
 
+	// Previous month button clicked
 	previousMonth() {
+		// Currently showing January
 		if (this.month == 0) {
+			// Move to previous year and December
 			this.getQueryParams.set('year', parseInt(this.getQueryParams.get('year')) - 1);
 			this.getQueryParams.set('month', 11);
 		} else {
+			// Show previous month
 			this.getQueryParams.set('month', parseInt(this.getQueryParams.get('month')) - 1);
 		}
+		// Rerun setup
 		this.setup();
 	}
 
@@ -49,15 +67,19 @@ class Calendar {
 			const month = new Date().getMonth();
 			this.getQueryParams.set('month', month);
 		}
+		// Do not display years prior to 1970
 		if (this.getQueryParams.get('year') < 1970) {
 			this.getQueryParams.set('year', 1970);
 		}
+		// Do not display months lower than 0 (January)
 		if (this.getQueryParams.get('month') < 0) {
 			this.getQueryParams.set('month', 0);
 		}
+		// Do not display months higher than 11 (December)
 		if (this.getQueryParams.get('month') > 11) {
 			this.getQueryParams.set('month', 11);
 		}
+		// Fill the browser history with this state so that the back and forward buttons work as expected
 		history.replaceState(null, '', window.location.pathname + '?' + this.getQueryParams.toString());
 	}
 
@@ -85,6 +107,7 @@ class Calendar {
 		return 0;
 	}
 
+	// Returns an integer representing the day of the week for a given day of the month (0 = Monday, 6 = Sunday)
 	getWeekDay(day) {
 		const date = new Date(this.year, this.month, day);
 		let dayOfWeek = date.getDay();
