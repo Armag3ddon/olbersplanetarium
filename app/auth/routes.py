@@ -58,7 +58,7 @@ def verify():
     if current_app.config.get('DEBUG'):
         flash(_('Debug-Modus aktiviert! Sicherheitstoken wird nicht überprüft.'))
     else:
-        report, email = verify_token(token, current_app.config['SECRET_KEY'], 'email-registration', 86400)
+        report, email = verify_token(token, current_app.config['SECRET_KEY'], 'email-registration', current_app.config['AUTH_TOKEN_VALIDITY'])
         if report != True:
             flash(email)
             return redirect(url_for('auth.login'))

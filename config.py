@@ -26,5 +26,7 @@ class Config(object):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEBUG = os.environ.get('MAIL_DEBUG') == 'True'
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER') or 'noreply@nothig.com'
+    # Authentication
+    AUTH_TOKEN_VALIDITY = int(os.environ.get('AUTH_TOKEN_VALIDITY') or 432000) # 5 days
     # Debug Mode
     DEBUG = os.environ.get('DEBUG') is not None
