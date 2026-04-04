@@ -72,6 +72,8 @@ class Right(db.Model):
     login_allowed: so.Mapped[bool] = so.mapped_column(default=True)
     # Create calendar entries
     create_calendar_entry: so.Mapped[bool] = so.mapped_column(default=False)
+    # Edit calendar year, enter holidays and school vacations
+    edit_calendar_year: so.Mapped[bool] = so.mapped_column(default=False)
     # Create users
     create_user: so.Mapped[bool] = so.mapped_column(default=False)
     # Edit users
@@ -107,10 +109,7 @@ class CalendarEntry(db.Model):
     description: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     start: so.Mapped[datetime] = so.mapped_column()
     end: so.Mapped[datetime] = so.mapped_column()
-    public: so.Mapped[bool] = so.mapped_column(default=False)
-    school: so.Mapped[bool] = so.mapped_column(default=False)
-    special: so.Mapped[bool] = so.mapped_column(default=False)
-    misc: so.Mapped[bool] = so.mapped_column(default=False)
+    type: so.Mapped[int] = so.mapped_column(default=3) # see CALENDAR_TYPES in calendar/routes.py for type definitions
     # These entries block the planetarium room
     blocking: so.Mapped[bool] = so.mapped_column(default=True)
     # If part of a multi day entry, this links to the series

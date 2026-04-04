@@ -1,0 +1,147 @@
+{% extends 'main/main.html' %}
+
+{% from 'bootstrap5/utils.html' import render_icon %}
+{% from 'bootstrap5/form.html' import render_field %}
+
+{% block headline %}{{ _('Veranstaltungskalender') }}{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ _('Ferien & Feiertage bearbeiten') }}</h5>
+                    <p class="card-text">
+                        {{ _('Hier können die Ferienzeiten und Feiertage jahresweise eingetragen werden. Bearbeitet wird immer ein ganzes Jahr. Die Tage können auch von öffentlichen APIs automatisch abgerufen werden.') }}<br>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card bg-complementary p-2">
+                {{ form.csrf_token() }}
+                {{ render_field(form.year) }}
+                <div id="row_container"></div>
+                <div class="d-grid gap-2 col-4 d-md-flex justify-content-md-start">
+                    <button class="btn btn-success mt-2" id="add">{{ _('Reihe hinzufügen') }}</button>
+                </div>
+                {{ render_field(form.days) }}
+                <div class="d-grid gap-2 col-4 d-md-flex justify-content-md-start">
+                    {{ render_field(form.submit) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ _('Automatischer Abruf') }}</h5>
+                    <p class="card-text">
+                        <label for="api1" class="form-label">{{ _('Direktlink zur Ferien API:') }}</label>
+                        <input type="text" class="form-control" id="api1" value="https://schulferien-api.de/api/v1/{{year}}/HB">
+                        <label for="api2" class="form-label">{{ _('Direktlink zur Feiertags API:') }}</label>
+                        <input type="text" class="form-control" id="api2" value="https://get.api-feiertage.de/?years={{year}}&states=hb">
+                        <button class="btn btn-primary mt-2" id="fetch">{{ _('Daten abrufen') }}</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="yearchanged" tabindex="-1" role="dialog" aria-labelledby="yearchangedTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="yearchangedTitle">{{ _('Ungespeicherte Änderungen?') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    {{ _('Achtung! Möchtest du wirklich das Jahr ändern und die Änderungen ggf. verwerfen?') }}
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Nein') }}</button>
+                <button type="button" class="btn btn-primary">{{ _('Ja') }}</button>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/calendaryears.js') }}"></script>
+<script src="{{ url_for('static', filename='js/luxon.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-3.7.1.js') }}"></script>
+<script>
+    const locale = '{{ lang }}';
+    const DateTime = luxon.DateTime;
+    const title_text = '{{ _('Bezeichnung') }}';
+    const startdate_text = '{{ _('Beginn') }}';
+    const enddate_text = '{{ _('Ende') }}';
+    let current_year = parseInt('{{ year }}');
+
+    const calendarYear = new CalendarYear(document.getElementById('row_container'), document.getElementById('year'));
+    calendarYear.queryYear();
+    document.getElementById('add').addEventListener('click', () => {
+        calendarYear.createRow('', '', '');
+    });
+    document.getElementById('fetch').addEventListener('click', () => {
+        const apiUrl = document.getElementById('api1').value;
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                calendarYear.clearRows();
+                data.forEach(entry => {
+                    const title = entry.name_cp || entry.name || '';
+                    const startDate = DateTime.fromISO(entry.start).toFormat('yyyy-MM-dd');
+                    const endDate = DateTime.fromISO(entry.end).toFormat('yyyy-MM-dd');
+                    calendarYear.createRow(title, startDate, endDate);
+                    calendarYear.JSONify();
+                });
+                const apiUrl2 = document.getElementById('api2').value;
+                fetch(apiUrl2)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.feiertage.forEach(entry => {
+                            const title = entry.fname || '';
+                            const startDate = DateTime.fromISO(entry.date).toFormat('yyyy-MM-dd');
+                            const endDate = DateTime.fromISO(entry.date).toFormat('yyyy-MM-dd');
+                            calendarYear.createRow(title, startDate, endDate);
+                            calendarYear.JSONify();
+                        });
+                    });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                alert('{{ _("Fehler beim Abrufen der Daten. Bitte überprüfen API-URL und Internetverbindung überprüfen.") }}');
+            });
+    });
+    $('#year').on('change', function() {
+        $('#yearchanged').modal('show');
+    });
+    $('#yearchanged').on('hide.bs.modal', function (e) {
+        calendarYear.revertChangeYear();
+    });
+    $('#yearchanged .btn-primary').on('click', function() {
+        calendarYear.changeYear();
+        $('#yearchanged').modal('hide');
+    });
+    $('#yearchanged .btn-secondary').on('click', function() {
+        $('#yearchanged').modal('hide');
+    });
+        $('#yearchanged .close').on('click', function() {
+        $('#yearchanged').modal('hide');
+    });
+
+
+</script>
+{% endblock %}

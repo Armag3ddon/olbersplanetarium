@@ -47,12 +47,26 @@
         <div class="col-8">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Legende</h5>
+                    <h5 class="card-title">{{ _('Legende') }}</h5>
                     <p class="card-text calendar-today">Heute</p>
                 </div>
             </div>
         </div>
     </div>
+    {% if edit_year %}
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ _('Kalendereinstellungen') }}</h5>
+                    <p class="card-text">
+                        <a href="{{ url_for('calendar.calendaryears') }}" class="btn btn-primary">{{ _('Kalenderjahre bearbeiten') }}</a> (Schulferien, Feiertage)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 

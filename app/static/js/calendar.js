@@ -4,6 +4,8 @@ Create and render a calendar view
 
 */
 
+const event_types = ['public', 'school', 'special', 'misc', 'public_holiday', 'vacation'];
+
 // Calendar class
 class Calendar {
 	constructor(parent, month_display, year_display) {
@@ -213,19 +215,7 @@ class Calendar {
 		for (let i = 0; i < events.length; i++) {
 			// Use luxon.js to parse the event time
 			time = DateTime.fromHTTP(events[i].start).setLocale(locale);
-			type = 'secondary';
-			if (events[i].public) {
-				type = 'public';
-			}
-			if (events[i].school) {
-				type = 'school';
-			}
-			if (events[i].special) {
-				type = 'special';
-			}
-			if (events[i].misc) {
-				type = 'misc';
-			}
+			type = event_types[events[i].type] || 'misc';
 			html +=
 			`<div class="btn-${type} m-1 p-1 mx-auto calendar-event" data-id="${events[i].id}">
 				<p class="m-0">${time.toLocaleString(DateTime.TIME_SIMPLE)}: ${events[i].title}</p>
