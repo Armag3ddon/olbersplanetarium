@@ -1,8 +1,8 @@
-"""empty message
+"""Recreate database
 
-Revision ID: c301fcaa235c
-Revises: 153a88725401
-Create Date: 2026-02-04 23:24:43.905741
+Revision ID: aaf2efdb7178
+Revises: 
+Create Date: 2026-04-05 01:15:58.585183
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c301fcaa235c'
-down_revision = '153a88725401'
+revision = 'aaf2efdb7178'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -22,7 +22,6 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.drop_table('user')
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=128), nullable=False),
@@ -47,10 +46,7 @@ def upgrade():
     sa.Column('description', sa.String(length=256), nullable=True),
     sa.Column('start', sa.DateTime(), nullable=False),
     sa.Column('end', sa.DateTime(), nullable=False),
-    sa.Column('public', sa.Boolean(), nullable=False),
-    sa.Column('school', sa.Boolean(), nullable=False),
-    sa.Column('special', sa.Boolean(), nullable=False),
-    sa.Column('misc', sa.Boolean(), nullable=False),
+    sa.Column('type', sa.Integer(), nullable=False),
     sa.Column('blocking', sa.Boolean(), nullable=False),
     sa.Column('series_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['series_id'], ['calendar_series.id'], ),
@@ -80,6 +76,7 @@ def upgrade():
     sa.Column('is_admin', sa.Boolean(), nullable=False),
     sa.Column('login_allowed', sa.Boolean(), nullable=False),
     sa.Column('create_calendar_entry', sa.Boolean(), nullable=False),
+    sa.Column('edit_calendar_year', sa.Boolean(), nullable=False),
     sa.Column('create_user', sa.Boolean(), nullable=False),
     sa.Column('edit_user', sa.Boolean(), nullable=False),
     sa.Column('delete_user', sa.Boolean(), nullable=False),
